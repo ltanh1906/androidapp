@@ -1,83 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="horizontal"
-    android:weightSum="10"
-    android:layout_height="match_parent"
+<RelativeLayout android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
-        android:orientation="vertical"
-        android:background="#b4b483"
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_weight="1"
-            android:text="1"
-            android:layout_width="match_parent"
-            android:textSize="40sp"
-            android:gravity="center"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="#ff00"
-            android:text="2"
-            android:layout_width="match_parent"
-            android:textSize="40sp"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="vertical"
-        android:background="#fff0"
-        android:layout_weight="3"
-        android:layout_width="0dp"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_weight="1"
-            android:text="3"
-            android:layout_width="match_parent"
-            android:textSize="40sp"
-            android:gravity="center"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="#e2a1a1"
-            android:text="4"
-            android:layout_width="match_parent"
-            android:textSize="40sp"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="#ff7b00"
-            android:text="5"
-            android:layout_width="match_parent"
-            android:textSize="40sp"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="vertical"
-        android:background="#b856e2"
-        android:weightSum="10"
-        android:layout_weight="4"
-        android:layout_width="0dp"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_weight="8"
-            android:text="6"
-            android:layout_width="match_parent"
-            android:textSize="40sp"
-            android:gravity="center"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_weight="2"
-            android:gravity="center"
-            android:background="#e2a1a1"
-            android:text="7"
-            android:layout_width="match_parent"
-            android:textSize="40sp"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-</LinearLayout>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Nhập số thứ nhất"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:id="@+id/editTextNumber1" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Nhập số thứ 2"
+        android:ems="10"
+        android:id="@+id/editTextNumber2"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/editTextNumber1"
+        android:layout_alignLeft="@+id/editTextNumber1"
+        android:layout_alignStart="@+id/editTextNumber1" />
+
+    <Button
+        android:text="Random"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:id="@+id/buttonRandom"
+        android:layout_below="@+id/editTextNumber2"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textViewNumber"
+        android:textSize="30sp"
+        android:textStyle="normal|bold"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
