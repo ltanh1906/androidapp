@@ -28,78 +28,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        seekBar = (SeekBar) findViewById(R.id.seekBar);
-        textView = (TextView) findViewById(R.id.textView);
-        startButton = (Button) findViewById(R.id.startButton);
+        // Hiển thị thông báo chào mừng khi ứng dụng khởi động
+        Toast.makeText(this, "Chào mừng bạn đến với hệ thống quản lý học sinh!", Toast.LENGTH_SHORT).show();
 
-        // Cập nhật TextView khi người dùng điều chỉnh SeekBar
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                selectedTime = progress;
-                textView.setText(selectedTime + "s");
-            }
+        // Tạo lớp học và thêm học sinh
+        Classroom classroom = new Classroom();
+        classroom.addStudent(new Student("An", 16, 8.5));
+        classroom.addStudent(new Student("Bình", 17, 9.0));
+        classroom.addStudent(new Student("Cường", 16, 7.8));
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-
-        // Bắt đầu hoặc dừng bộ đếm ngược khi nhấn nút
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isCountingDown) {
-                    stopCountDown();
-                } else {
-                    startCountDown(selectedTime * 1000); // Chuyển giây thành mili giây
-                }
-            }
-        });
-
-    }
-
-    private void startCountDown(int timeInMillis) {
-        isCountingDown = true;
-        startButton.setText("Stop");
-        seekBar.setEnabled(false);
-
-        countDownTimer = new CountDownTimer(timeInMillis, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                textView.setText(millisUntilFinished / 1000 + "s");
-            }
-
-            @Override
-            public void onFinish() {
-                textView.setText("Hết giờ");
-                stopCountDown();
-            }
-        };
-
-        countDownTimer.start();
-    }
-
-    private void stopCountDown() {
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
-        isCountingDown = false;
-        startButton.setText("Start");
-        seekBar.setEnabled(true);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
+        // Tìm học sinh có điểm trung bình cao nhất
+        Student topStudent = classroom.getTopStudent();
+        if (topStudent != null) {
+            String topStudentInfo = "Học sinh có điểm cao nhất: " + topStudent.getName() +
+                    " - Điểm: " + topStudent.getAverageScore();
+            // Hiển thị thông tin học sinh có điểm cao nhất bằng Toast
+            Toast.makeText(this, topStudentInfo, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Không có học sinh nào trong lớp.", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 }
