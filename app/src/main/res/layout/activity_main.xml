@@ -4,15 +4,15 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- ProgressBar hiển thị tiến trình đếm ngược -->
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
+    <!-- SeekBar để điều chỉnh thời gian đếm ngược -->
+    <SeekBar
+        android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="100"
-        android:progress="100"
-        android:layout_centerInParent="true"/>
+        android:max="60"
+        android:progress="10"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"/>
 
     <!-- TextView để hiển thị thời gian đếm ngược còn lại -->
     <TextView
@@ -22,7 +22,17 @@
         android:textSize="24sp"
         android:text="10s"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/progressBar"
+        android:layout_below="@id/seekBar"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Nút bắt đầu bộ đếm ngược -->
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/textView"
         android:layout_marginTop="20dp"/>
 
 </RelativeLayout>
