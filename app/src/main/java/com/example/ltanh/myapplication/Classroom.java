@@ -27,6 +27,12 @@ public class Classroom {
         }
     }
 
+    public void removeStudent(int position) {
+        if (position >= 0 && position < students.size()) {
+            students.remove(position);
+        }
+    }
+
     public ArrayList<Student> getStudents() {
         return students;
     }
