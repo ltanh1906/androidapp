@@ -27,6 +27,9 @@ public class Classroom {
         }
     }
 
+    public ArrayList<Student> getStudents() {
+        return students;
+    }
     // Tìm học sinh có điểm trung bình cao nhất
     public Student getTopStudent() {
         if (students.isEmpty()) {
