@@ -1,5 +1,6 @@
 package com.example.ltanh.myapplication;
-
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,28 +41,18 @@ public class MainActivity extends AppCompatActivity {
 
         // Khởi tạo ListView để hiển thị danh sách học sinh
         studentListView = (ListView) findViewById(R.id.studentListView);
+        Button addStudentButton = (Button) findViewById(R.id.addStudentButton);
         updateStudentList();
 
-        // Xử lý sự kiện xóa học sinh khi nhấn vào một mục trong ListView
-        studentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // Xử lý sự kiện nhấn để thêm học sinh mới
+        addStudentButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Xóa học sinh khỏi danh sách lớp và cập nhật lại ListView
-                classroom.removeStudent(position);
-                updateStudentList();
-                Toast.makeText(MainActivity.this, "Đã xóa học sinh.", Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                showStudentDialog(null, -1); // Thêm học sinh mới
             }
         });
 
-        // Hiển thị học sinh có điểm trung bình cao nhất
-        Student topStudent = classroom.getTopStudent();
-        if (topStudent != null) {
-            String topStudentInfo = "Học sinh có điểm cao nhất: " + topStudent.getName() +
-                    " - Điểm: " + topStudent.getAverageScore();
-            Toast.makeText(this, topStudentInfo, Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Không có học sinh nào trong lớp.", Toast.LENGTH_SHORT).show();
-        }
+
     }
 
     private void updateStudentList() {
@@ -76,7 +67,42 @@ public class MainActivity extends AppCompatActivity {
         studentListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
+    private void showStudentDialog(final Student student, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        // Tạo giao diện nhập thông tin
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_student, null);
+        builder.setView(dialogView);
+
+        final EditText nameInput = (EditText) dialogView.findViewById(R.id.studentNameInput);
+        final EditText ageInput =(EditText) dialogView.findViewById(R.id.studentAgeInput);
+        final EditText scoreInput =(EditText) dialogView.findViewById(R.id.studentScoreInput);
+
+
+
+        // Nút xác nhận
+        builder.setPositiveButton("Lưu", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String name = nameInput.getText().toString();
+                int age = Integer.parseInt(ageInput.getText().toString());
+                double score = Double.parseDouble(scoreInput.getText().toString());
+
+                if (student == null) {
+                    // Thêm mới học sinh
+                    classroom.addStudent(new Student(name, age, score));
+                    Toast.makeText(MainActivity.this, "Đã thêm học sinh.", Toast.LENGTH_SHORT).show();
+                }
+
+                updateStudentList(); // Cập nhật danh sách hiển thị
+            }
+        });
+
+        // Nút hủy
+        builder.setNegativeButton("Hủy", null);
+
+        builder.create().show();
+    }
 
 
 }

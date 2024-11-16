@@ -1,13 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <!-- Nút Thêm Học Sinh -->
+    <Button
+        android:id="@+id/addStudentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp"
+        android:text="Thêm Học Sinh" />
+
     <!-- ListView để hiển thị danh sách học sinh -->
     <ListView
         android:id="@+id/studentListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/addStudentButton"
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>
