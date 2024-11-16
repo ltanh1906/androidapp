@@ -19,4 +19,14 @@
         android:layout_height="wrap_content"
         android:text="Hiển thị Popup Menu"
         android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/contextMenuTarget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="Nhấn giữ vào đây để mở Context Menu"
+        android:background="#E0E0E0"
+        android:gravity="center" />
+
 </LinearLayout>
