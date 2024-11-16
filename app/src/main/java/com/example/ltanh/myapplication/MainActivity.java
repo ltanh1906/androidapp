@@ -52,7 +52,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        // Xử lý sự kiện nhấn vào một học sinh để chỉnh sửa
+        studentListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showStudentDialog(classroom.getStudents().get(position), position); // Chỉnh sửa học sinh
+            }
+        });
     }
 
     private void updateStudentList() {
@@ -67,8 +73,10 @@ public class MainActivity extends AppCompatActivity {
         studentListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
+    // Hàm hiển thị hộp thoại để thêm hoặc chỉnh sửa học sinh
     private void showStudentDialog(final Student student, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(student == null ? "Thêm Học Sinh" : "Chỉnh Sửa Học Sinh");
 
         // Tạo giao diện nhập thông tin
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_student, null);
@@ -78,7 +86,12 @@ public class MainActivity extends AppCompatActivity {
         final EditText ageInput =(EditText) dialogView.findViewById(R.id.studentAgeInput);
         final EditText scoreInput =(EditText) dialogView.findViewById(R.id.studentScoreInput);
 
-
+        // Nếu chỉnh sửa, điền thông tin sẵn có
+        if (student != null) {
+            nameInput.setText(student.getName());
+            ageInput.setText(String.valueOf(student.getAge()));
+            scoreInput.setText(String.valueOf(student.getAverageScore()));
+        }
 
         // Nút xác nhận
         builder.setPositiveButton("Lưu", new DialogInterface.OnClickListener() {
@@ -92,6 +105,12 @@ public class MainActivity extends AppCompatActivity {
                     // Thêm mới học sinh
                     classroom.addStudent(new Student(name, age, score));
                     Toast.makeText(MainActivity.this, "Đã thêm học sinh.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Chỉnh sửa học sinh
+                    student.setName(name);
+                    student.setAge(age);
+                    student.setAverageScore(score);
+                    Toast.makeText(MainActivity.this, "Đã chỉnh sửa học sinh.", Toast.LENGTH_SHORT).show();
                 }
 
                 updateStudentList(); // Cập nhật danh sách hiển thị
