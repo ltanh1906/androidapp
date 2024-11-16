@@ -1,24 +1,22 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     android:padding="16dp">
 
-    <!-- Nút Thêm Học Sinh -->
-    <Button
-        android:id="@+id/addStudentButton"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="10dp"
-        android:text="Thêm Học Sinh" />
+        android:text="Menu Demo"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center" />
 
-    <!-- ListView để hiển thị danh sách học sinh -->
-    <ListView
-        android:id="@+id/studentListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/addStudentButton"
-        android:layout_marginTop="10dp" />
-
-</RelativeLayout>
+    <Button
+        android:id="@+id/showPopupButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hiển thị Popup Menu"
+        android:layout_marginTop="20dp" />
+</LinearLayout>
