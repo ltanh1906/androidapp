@@ -4,13 +4,15 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tvLogs"
+    <Button
+        android:id="@+id/add_rule_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Logs sẽ được hiển thị tại đây"
-        android:textSize="16sp"
-        android:padding="8dp"
-        android:background="#f0f0f0"
-        android:scrollbars="vertical" />
+        android:text="Add Rule" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp" />
 </LinearLayout>
