@@ -1,4 +1,9 @@
 package com.example.ltanh.myapplication;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,10 +11,18 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Switch;
+import android.widget.CompoundButton;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     public static TextToSpeech tts;
     private List<Rule> ruleList = new ArrayList<>();
     private RuleAdapter ruleAdapter;
+    private boolean serviceEnabled = true; // Track if the service is enabled
+    private float speechRate = 1.0f; // Default speech rate
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
                     tts.setLanguage(Locale.getDefault());
+                    tts.setSpeechRate(speechRate); // Apply stored speech rate
                     Toast.makeText(MainActivity.this, "Text-to-Speech initialized successfully!", Toast.LENGTH_SHORT).show();
+
                 } else {
                     Toast.makeText(MainActivity.this, "Failed to initialize Text-to-Speech!", Toast.LENGTH_SHORT).show();
                 }
@@ -43,6 +61,28 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         Button addRuleButton = (Button) findViewById(R.id.add_rule_button);
+        Switch enableServiceSwitch = (Switch) findViewById(R.id.enable_service_switch);
+        Button speechSettingsButton = (Button) findViewById(R.id.speech_settings_button);
+
+        // Set up the service enable/disable switch
+        enableServiceSwitch.setChecked(serviceEnabled);
+        enableServiceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                serviceEnabled = isChecked;
+                Toast.makeText(MainActivity.this,
+                        isChecked ? "Service enabled" : "Service disabled",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Set up speech settings button
+        speechSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSpeechSettingsDialog();
+            }
+        });
 
         // Thiết lập RecyclerView
         ruleList = RuleManager.loadRules(this);
@@ -57,14 +97,74 @@ public class MainActivity extends AppCompatActivity {
                 showAddRuleDialog();
             }
         });
-
+        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver,
+                new IntentFilter("NotificationMessage"));
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.history) {
+            Intent intent = new Intent(this, HistoryActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // BroadcastReceiver nhận tin nhắn từ NotificationService
+    private final BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Log.d("MainActivity", "Received message: " + message);
+            if (message != null && serviceEnabled) { // Only speak if service is enabled
+                speakMessage(message);
+            }
+        }
+    };
+    // Đọc tin nhắn bằng TextToSpeech
+    private void speakMessage(String message) {
+        if (tts != null) {
+            tts.speak(message, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
+    }
     @Override
     protected void onPause() {
         super.onPause();
         // Save rules to SharedPreferences when the app is paused
         RuleManager.saveRules(this, ruleList);
+        // Save other settings
+        getSharedPreferences("app_settings", MODE_PRIVATE)
+                .edit()
+                .putBoolean("service_enabled", serviceEnabled)
+                .putFloat("speech_rate", speechRate)
+                .apply();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Load settings
+        serviceEnabled = getSharedPreferences("app_settings", MODE_PRIVATE)
+                .getBoolean("service_enabled", true);
+        speechRate = getSharedPreferences("app_settings", MODE_PRIVATE)
+                .getFloat("speech_rate", 1.0f);
+
+        // Update UI to reflect loaded settings
+        Switch enableServiceSwitch = (Switch) findViewById(R.id.enable_service_switch);
+        if (enableServiceSwitch != null) {
+            enableServiceSwitch.setChecked(serviceEnabled);
+        }
+
+        // Apply speech rate if TTS is initialized
+        if (tts != null) {
+            tts.setSpeechRate(speechRate);
+        }
     }
 
     public static void appendLog(String log) {
@@ -75,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
         appendLog(log);
         tvLogs.setText(logBuilder.toString());
     }
+
     private void showAddRuleDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_rule, null);
