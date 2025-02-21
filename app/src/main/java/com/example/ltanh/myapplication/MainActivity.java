@@ -176,6 +176,68 @@ public class MainActivity extends AppCompatActivity {
         tvLogs.setText(logBuilder.toString());
     }
 
+    private void showSpeechSettingsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_speech_settings, null);
+        builder.setView(dialogView);
+        builder.setTitle("Speech Settings");
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Get view references
+        final SeekBar rateSeekBar = (SeekBar) dialogView.findViewById(R.id.speech_rate_seekbar);
+        final TextView rateValueText = (TextView) dialogView.findViewById(R.id.speech_rate_value);
+        Button testButton = (Button) dialogView.findViewById(R.id.test_speech_button);
+        Button saveButton = (Button) dialogView.findViewById(R.id.save_settings_button);
+
+        // Set up the seek bar
+        rateSeekBar.setProgress((int)(speechRate * 10));
+        rateValueText.setText(String.format("%.1fx", speechRate));
+
+        rateSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float rate = progress / 10.0f;
+                if (rate < 0.1f) rate = 0.1f;
+                rateValueText.setText(String.format("%.1fx", rate));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        // Test button
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float rate = rateSeekBar.getProgress() / 10.0f;
+                if (rate < 0.1f) rate = 0.1f;
+                if (tts != null) {
+                    tts.setSpeechRate(rate);
+                    tts.speak("Xin chào", TextToSpeech.QUEUE_FLUSH, null, null);
+                }
+            }
+        });
+
+        // Save button
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speechRate = rateSeekBar.getProgress() / 10.0f;
+                if (speechRate < 0.1f) speechRate = 0.1f;
+                if (tts != null) {
+                    tts.setSpeechRate(speechRate);
+                }
+                Toast.makeText(MainActivity.this, "Speech settings saved", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+    }
+
     private void showAddRuleDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_rule, null);
